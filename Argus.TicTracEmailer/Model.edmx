@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TicTracModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="GetEmailTemplate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmailCode" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="SendEmail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmailBody" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EmailSubject" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EmailRecipient" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EmailCC" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EmailBCC" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EmailFrom" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EmailFromName" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EmailBodyHtml" Type="bit" Mode="In" />
+        </Function>
+        <EntityContainer Name="TicTracModelStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TicTracModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TicTracEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="GetEmailTemplate" ReturnType="Collection(TicTracModel.GetEmailTemplate_Result)">
+          <Parameter Name="EmailCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SendEmail">
+            <Parameter Name="EmailBody" Mode="In" Type="String" />
+            <Parameter Name="EmailSubject" Mode="In" Type="String" />
+            <Parameter Name="EmailRecipient" Mode="In" Type="String" />
+            <Parameter Name="EmailCC" Mode="In" Type="String" />
+            <Parameter Name="EmailBCC" Mode="In" Type="String" />
+            <Parameter Name="EmailFrom" Mode="In" Type="String" />
+            <Parameter Name="EmailFromName" Mode="In" Type="String" />
+            <Parameter Name="EmailBodyHtml" Mode="In" Type="Boolean" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="GetEmailTemplate_Result">
+          <Property Type="String" Name="EmailSubjectDescription" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="EmailBody" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TicTracModelStoreContainer" CdmEntityContainer="TicTracEntities" >
+          <FunctionImportMapping FunctionImportName="GetEmailTemplate" FunctionName="TicTracModel.Store.GetEmailTemplate">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TicTracModel.GetEmailTemplate_Result">
+                <ScalarProperty Name="EmailSubjectDescription" ColumnName="EmailSubjectDescription" />
+                <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SendEmail" FunctionName="TicTracModel.Store.SendEmail" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
