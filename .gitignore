@@ -5,3 +5,5 @@
 /Argus.TicTracEmailer/bin
 /Argus.TicTracEmailer/obj
 /.vs/Argus.TicTracEmailer/v15/Server/sqlite3
+/.vs/Argus.TicTracEmailer
+/packages

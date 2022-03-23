@@ -21,14 +21,14 @@ namespace Argus.TicTracEmailer
         public static int Weeks { get; set; } = 0;
         private static bool SetQuarterDates()
         {
-            var quarter = CurrentQuarter();
+            var quarter = CurrentQuarter(new DateTime(2022,4,5));
 
             bool valid = true;
             if (Convert.ToBoolean(ConfigurationManager.AppSettings["OverrideQuarter"]))
             {
                 Start = DateTime.Parse(ConfigurationManager.AppSettings["QuarterStart"]);
                 End = DateTime.Parse(ConfigurationManager.AppSettings["QuarterEnd"]);
-                Weeks = (int)((End - Start).Days / 7);
+                Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
             }
             else if(Convert.ToBoolean(ConfigurationManager.AppSettings["RegularQuarter"]))
             {
@@ -37,22 +37,22 @@ namespace Argus.TicTracEmailer
                     case 1:
                         Start = new DateTime(DateTime.Today.Year - 1, 10, 1);
                         End = new DateTime(DateTime.Today.Year - 1, 12, 31);
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
                     case 2:
                         Start = new DateTime(DateTime.Today.Year, 1, 1);
                         End = new DateTime(DateTime.Today.Year, 3, 31);
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
                     case 3:
                         Start = new DateTime(DateTime.Today.Year, 4, 1);
                         End = new DateTime(DateTime.Today.Year, 6, 30);
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
                     case 4:
                         Start = new DateTime(DateTime.Today.Year, 7, 1);
                         End = new DateTime(DateTime.Today.Year, 9, 30);
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
                     default:
                         log.ErrorFormat("Quarter {0} not valid.", quarter);
@@ -82,7 +82,7 @@ namespace Argus.TicTracEmailer
                         }
 
                         End = Q4End;
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
 
                     case 2:
@@ -103,7 +103,7 @@ namespace Argus.TicTracEmailer
                         }
 
                         End = Q1End;
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
 
                     case 3:
@@ -124,7 +124,7 @@ namespace Argus.TicTracEmailer
                         }
 
                         End = Q2End;
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
                     case 4:
                         var Q3Start = new DateTime(DateTime.Today.Year, 7, 1);
@@ -144,7 +144,7 @@ namespace Argus.TicTracEmailer
                         }
 
                         End = Q3End;
-                        Weeks = (int)((End - Start).Days / 7);
+                        Weeks = (int)(Math.Round((double)(End - Start).Days / 7));
                         break;
                     default:
                         log.ErrorFormat("Quarter {0} not valid.", quarter);
