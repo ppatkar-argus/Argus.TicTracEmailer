@@ -21,7 +21,7 @@ namespace Argus.TicTracEmailer
         public static int Weeks { get; set; } = 0;
         private static bool SetQuarterDates()
         {
-            var quarter = CurrentQuarter(new DateTime(2022,4,5));
+            var quarter = CurrentQuarter();
 
             bool valid = true;
             if (Convert.ToBoolean(ConfigurationManager.AppSettings["OverrideQuarter"]))
