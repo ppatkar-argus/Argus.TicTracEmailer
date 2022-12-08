@@ -13,7 +13,7 @@ namespace Argus.TicTracEmailer
     public static class Activity
     {
         private static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+        /*
         public static DateTime Start { get; set; } = new DateTime();
 
         public static DateTime End { get; set; } = new DateTime();
@@ -175,6 +175,7 @@ namespace Argus.TicTracEmailer
             int diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
             return dt.AddDays(-1 * diff).Date;
         }
+        */
         
         public static void ProcessActivityEmails()
         {
@@ -192,10 +193,10 @@ namespace Argus.TicTracEmailer
                 var emailtemplate = entities.GetEmailTemplate(ConfigurationManager.AppSettings["ActivityEmailCode"]).FirstOrDefault();
                 if (emailtemplate != null)
                 {
-                    var valid = SetQuarterDates();
+                    //var valid = SetQuarterDates();
 
-                    if (valid)
-                    {
+                    //if (valid)
+                    //{
                         foreach (CellRange range in sheet.Columns[0])
                         {
                             if (range.Row > 1)
@@ -204,7 +205,7 @@ namespace Argus.TicTracEmailer
                             }
 
                         }
-                    }
+                    //}
                 }
                 else
                 {
@@ -220,33 +221,44 @@ namespace Argus.TicTracEmailer
             TicTracEntities entities = new TicTracEntities();
             int columnCount = sheet.Columns.Length;
             CellRange sourceRange = sheet.Range[range.Row, 1, range.Row, columnCount];
+
             var firstname = sourceRange.Rows[0].CellList[0].Value;
             var lastname = sourceRange.Rows[0].CellList[1].Value;
             var email = sourceRange.Rows[0].CellList[2].Value;
-            var activeminutes = sourceRange.Rows[0].CellList[6].Value;
-            //var rewardminutes = sourceRange.Rows[0].CellList[7].Value;
-            var rewards = sourceRange.Rows[0].CellList[7].Value;
-            if (emailBody != null)
+
+            if(string.IsNullOrWhiteSpace(email) == false)
             {
-                emailBody = emailBody.Replace("#Name", firstname + " " + lastname);
-                emailBody = emailBody.Replace("#ActiveMinutes ", activeminutes);
-                emailBody = emailBody.Replace("#Rewards", rewards);
-                emailBody = emailBody.Replace("#Start", Start.ToString("MM/dd/yyyy"));
-                emailBody = emailBody.Replace("#End", End.ToString("MM/dd/yyyy"));
-                emailBody = emailBody.Replace("#Weeks", Weeks.ToString());
-
-                int result = 0;
-                bool valid = int.TryParse(activeminutes, out result);
-                if (string.IsNullOrEmpty(activeminutes) == false && valid && result > 0)
+                var activeminutes = sourceRange.Rows[0].CellList[6].Value;
+                //var rewardminutes = sourceRange.Rows[0].CellList[7].Value;
+                var rewards = sourceRange.Rows[0].CellList[7].Value;
+                var start = Convert.ToDateTime(sourceRange.Rows[0].CellList[8].Value);
+                var end = Convert.ToDateTime(sourceRange.Rows[0].CellList[9].Value);
+                var rewardweeks = sourceRange.Rows[0].CellList[10].Value;
+                var weeks = (int)(Math.Round((double)(end - start).Days / 7));
+                if (emailBody != null)
                 {
-                    entities.SendEmail(emailBody, emailSubject, email, null, null, ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailFromName"], true);
-                }
-                else
-                {
-                    log.InfoFormat("Email not sent to {0} , email-id {1} as thier active minutes are {2}.", firstname + " " + lastname, email, activeminutes);
-                }
+                    emailBody = emailBody.Replace("#Name", firstname + " " + lastname);
+                    emailBody = emailBody.Replace("#ActiveMinutes ", activeminutes);
+                    emailBody = emailBody.Replace("#Rewards", rewards);
+                    emailBody = emailBody.Replace("#Start", start.ToString("MM/dd/yyyy"));
+                    emailBody = emailBody.Replace("#End", end.ToString("MM/dd/yyyy"));
+                    emailBody = emailBody.Replace("#Weeks", weeks.ToString());
+                    emailBody = emailBody.Replace("#RewardWeeks", rewardweeks);
 
+                    int result = 0;
+                    bool valid = int.TryParse(activeminutes, out result);
+                    if (string.IsNullOrEmpty(activeminutes) == false && valid && result > 0)
+                    {
+                        entities.SendEmail(emailBody, emailSubject, email, null, null, ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailFromName"], true);
+                    }
+                    else
+                    {
+                        log.InfoFormat("Email not sent to {0} , email-id {1} as thier active minutes are {2}.", firstname + " " + lastname, email, activeminutes);
+                    }
+
+                }
             }
+            
         }
     }
 }
